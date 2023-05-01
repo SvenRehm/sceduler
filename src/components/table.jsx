@@ -1,26 +1,28 @@
-import { createSignal } from "solid-js";
+import { createSignal, createEffect } from "solid-js";
+
 import { GlobalStateData } from "../store/globalState.jsx";
 import { EVENTS } from "~/events.js";
 import {
     startOfWeek,
-    endOfWeek,
     eachDayOfInterval,
     addBusinessDays,
+    format,
     getDate,
+    getDay,
     getHours,
     getMinutes,
+    nextMonday,
 } from "date-fns";
+import de from "date-fns/locale/de";
 export default function Table() {
     const { name, setName, count, setCount } = GlobalStateData();
     const [currentWeekDays, setCurrentWeekDays] = createSignal([]);
-    const [weekDayName, setWeekDayName] = createSignal({
-        1: "Montag",
-        2: "Dienstag",
-        3: "Mittwoch",
-        4: "Donnerstag",
-        5: "Freitag",
-    });
-    // <Show
+    const [currentWeekStart, setCurrentWeekStart] = createSignal(
+        startOfWeek(new Date(), { weekStartsOn: 1 })
+    );
+    const [currentWeekEnd, setCurrentWeekEnd] = createSignal(
+        addBusinessDays(currentWeekStart(), 4)
+    );
     const [timeTable, setTimeTable] = createSignal([
         { start: "07:00", end: "7:45" },
         { start: "09:00", end: "7:45" },
@@ -29,23 +31,35 @@ export default function Table() {
         { start: "10:00", end: "7:45" },
         { start: "20:00", end: "7:45" },
     ]);
-    const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
-    const currentWeekEnd = addBusinessDays(currentWeekStart, 4);
-
-    const allWeekdays = eachDayOfInterval({
-        start: currentWeekStart,
-        end: currentWeekEnd,
+    function nextWeek() {
+        setCurrentWeekStart(nextMonday(currentWeekStart()));
+    }
+    createEffect(() => {
+        setCurrentWeekEnd(addBusinessDays(currentWeekStart(), 4));
+        setCurrentWeekDays(
+            eachDayOfInterval({
+                start: currentWeekStart(),
+                end: currentWeekEnd(),
+            })
+        );
+        console.log(currentWeekDays());
     });
-    setCurrentWeekDays(allWeekdays);
     console.log(EVENTS);
     return (
         <>
+            <button type="button" onClick={nextWeek}>
+                hello
+            </button>
             <table>
                 <thead>
                     <tr>
                         <td>Zeit</td>
                         <For each={currentWeekDays()}>
-                            {(day) => <td>{weekDayName()[getDate(day)]}</td>}
+                            {(day) => (
+                                <>
+                                    {format(day, "dd.LL cccc", {locale:de})}
+                                </>
+                            )}
                         </For>
                     </tr>
                 </thead>
