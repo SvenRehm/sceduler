@@ -34,12 +34,10 @@ export default function Table() {
   const [test, setTest] = createSignal([
     {
       id: 121233,
-      start: "",
-      end: "",
-
+      start: '',
+      end: ''
     }
-
-  ])
+  ]);
   function nextWeek() {
     setCurrentWeekStart(nextMonday(currentWeekStart()));
   }

@@ -6,7 +6,6 @@ import {
   startOfWeek,
   eachDayOfInterval,
   addBusinessDays,
-
   format,
   getDate,
   getDay,
@@ -24,7 +23,7 @@ export default function Test() {
   const [currentWeekEnd, setCurrentWeekEnd] = createSignal(
     addBusinessDays(currentWeekStart(), 4)
   );
-  
+
   const [test, setTest] = createSignal([
     {
       id: 121233,
@@ -79,49 +78,73 @@ export default function Test() {
       events: [{ title: 'bla' }]
     }
   ];
+
   return (
     <>
-      <button class="group rounded-2xl h-12 w-48 bg-green-500 font-bold text-lg text-white relative overflow-hidden" type="button" onClick={nextWeek}>
+      <button
+        class="group h-12 w-48 bg-cyan-200 font-bold text-lg text-white relative overflow-hidden"
+        type="button"
+        onClick={nextWeek}
+      >
         get next week
       </button>
-      <table class="min-w-full">
-        <thead class="bg-gray-200 border-b">
-          <tr>
-            <td scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Zeit</td>
-            <For each={currentWeekDays()}>
-              {(day) => <td class="text-sm font-medium text-gray-900 px-6 py-4 text-left">{format(day, 'dd.LL cccc', { locale: de })}</td>}
-            </For>
-          </tr>
-        </thead>
-        <tbody>
-          <For each={test()}>
-            {(timeSlot, i) => (
-              <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {timeSlot.start}
-                  {i() + 1}
-                  <br />
-                  {timeSlot.end}
-                </td>
-                <For each={currentWeekDays()}>
-                  {(day, j) => (
-                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                      {j() + 1}
-                      <For each={EventTest}>
-                        {(event) => (
-                          <Show when={event.day === j() + 1}>
-                            {JSON.stringify(event.events[i()]?.title)}
-                          </Show>
+
+      <div class="flex flex-col">
+        <div class="-m-1.5 overflow-x-auto">
+          <div class="p-1.5 min-w-full inline-block align-middle"></div>
+          <div class="border rounded-lg overflow-hidden dark:border-gray-700">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead class="">
+                <tr class="">
+                  <td
+                    scope="col"
+                    class="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                  >
+                    Zeit
+                  </td>
+                  <For each={currentWeekDays()}>
+                    {(day) => (
+                      <td class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                        {format(day, 'dd.LL cccc', { locale: de })}
+                      </td>
+                    )}
+                  </For>
+                </tr>
+              </thead>
+              <tbody>
+                <For each={test()}>
+                  {(timeSlot, i) => (
+                    <tr class="bg-white">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {timeSlot.start}
+                        {i() + 1}
+                        <br />
+                        {timeSlot.end}
+                      </td>
+                      <For each={currentWeekDays()}>
+                        {(day, j) => (
+                          <td class="text-sm  text-gray-900 font-light px-6 py-4 whitespace-nowrap hover:bg-gray-100 dark:hover:bg-gray-200">
+                            {j() + 1}
+                            <For each={EventTest}>
+                              {(event) => (
+                                <Show when={event.day === j() + 1}>
+                                  <div class="bg-pink-300">
+                                    {JSON.stringify(event.events[i()]?.title)}
+                                  </div>
+                                </Show>
+                              )}
+                            </For>
+                          </td>
                         )}
                       </For>
-                    </td>
+                    </tr>
                   )}
                 </For>
-              </tr>
-            )}
-          </For>
-        </tbody>
-      </table>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
