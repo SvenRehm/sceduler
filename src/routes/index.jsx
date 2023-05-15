@@ -3,6 +3,7 @@ import { supabase } from "../supabaseClient.js";
 import Account from "~/components/Account.jsx";
 import Auth from "~/components/Auth.jsx";
 import Table from "~/components/table.jsx";
+import Test from "~/components/test.jsx";
 export default function Home() {
     const [session, setSession] = createSignal(null);
 
@@ -15,11 +16,10 @@ export default function Home() {
             setSession(session);
         });
     });
-
-    // {!session() ? <Auth /> : <Account session={session()} />}
+// {!session() ? <Auth /> : <Account session={session()} />}
     return (
         <div class="container" style={{ padding: "50px 0 100px 0" }}>
-            <Table />
+            <Test />
         </div>
     );
 }

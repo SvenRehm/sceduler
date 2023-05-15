@@ -50,6 +50,13 @@ export default function Root() {
                                 >
                                     <A href="/about">About</A>
                                 </li>
+                                 <li
+                                    class={`border-b-2 ${active(
+                                        "/classes"
+                                    )} mx-1.5 sm:mx-6`}
+                                >
+                                    <A href="/classes">Classes</A>
+                                </li>
                             </ul>
                         </nav>
                         <GlobalStateProvider>

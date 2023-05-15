@@ -6,6 +6,7 @@ import {
   startOfWeek,
   eachDayOfInterval,
   addBusinessDays,
+
   format,
   getDate,
   getDay,
@@ -14,7 +15,7 @@ import {
   nextMonday
 } from 'date-fns';
 import de from 'date-fns/locale/de';
-export default function Table() {
+export default function Test() {
   const { name, setName, count, setCount } = GlobalStateData();
   const [currentWeekDays, setCurrentWeekDays] = createSignal([]);
   const [currentWeekStart, setCurrentWeekStart] = createSignal(
@@ -23,23 +24,29 @@ export default function Table() {
   const [currentWeekEnd, setCurrentWeekEnd] = createSignal(
     addBusinessDays(currentWeekStart(), 4)
   );
-  const [timeTable, setTimeTable] = createSignal([
-    { start: '07:00', end: '7:45' },
-    { start: '09:00', end: '7:45' },
-    { start: '07:00', end: '7:45' },
-    { start: '07:00', end: '7:45' },
-    { start: '10:00', end: '7:45' },
-    { start: '20:00', end: '7:45' }
-  ]);
+  
   const [test, setTest] = createSignal([
     {
       id: 121233,
-      start: "",
-      end: "",
-
+      start: '',
+      end: ''
+    },
+    {
+      id: 121233,
+      start: '',
+      end: ''
+    },
+    {
+      id: 121233,
+      start: '',
+      end: ''
+    },
+    {
+      id: 121233,
+      start: '',
+      end: ''
     }
-
-  ])
+  ]);
   function nextWeek() {
     setCurrentWeekStart(nextMonday(currentWeekStart()));
   }
@@ -54,48 +61,56 @@ export default function Table() {
     );
     console.log(currentWeekDays());
   });
-  console.log(EVENTS);
 
+  const EventTest = [
+    {
+      id: 1,
+      day: 1,
+      events: [{ title: 'bla' }, { title: 'asdadc' }, { title: 'afdg' }]
+    },
+    {
+      id: 2,
+      day: 2,
+      events: [{ title: 'bla' }]
+    },
+    {
+      id: 3,
+      day: 3,
+      events: [{ title: 'bla' }]
+    }
+  ];
   return (
     <>
-      <button type="button" onClick={nextWeek}>
-        hello
+      <button class="group rounded-2xl h-12 w-48 bg-green-500 font-bold text-lg text-white relative overflow-hidden" type="button" onClick={nextWeek}>
+        get next week
       </button>
-      <table>
-        <thead>
+      <table class="min-w-full">
+        <thead class="bg-gray-200 border-b">
           <tr>
-            <td>Zeit</td>
+            <td scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">Zeit</td>
             <For each={currentWeekDays()}>
-              {(day) => <td>{format(day, 'dd.LL cccc', { locale: de })}</td>}
+              {(day) => <td class="text-sm font-medium text-gray-900 px-6 py-4 text-left">{format(day, 'dd.LL cccc', { locale: de })}</td>}
             </For>
           </tr>
         </thead>
         <tbody>
-          <For each={timeTable()}>
-            {(timeSlot) => (
-              <tr>
-                <td>
+          <For each={test()}>
+            {(timeSlot, i) => (
+              <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {timeSlot.start}
+                  {i() + 1}
                   <br />
                   {timeSlot.end}
                 </td>
                 <For each={currentWeekDays()}>
-                  {(day) => (
-                    <td>
-                      <For each={EVENTS}>
+                  {(day, j) => (
+                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                      {j() + 1}
+                      <For each={EventTest}>
                         {(event) => (
-                          <Show
-                            when={
-                              `${getHours(event.start)
-                                .toString()
-                                .padStart(2, '0')}:00` === timeSlot.start
-                            }
-                          >
-                            <Show when={getDate(event.start) == getDate(day)}>
-                              {`${getHours(event.start)
-                                .toString()
-                                .padStart(2, '0')}:00`}
-                            </Show>
+                          <Show when={event.day === j() + 1}>
+                            {JSON.stringify(event.events[i()]?.title)}
                           </Show>
                         )}
                       </For>
